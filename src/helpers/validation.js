@@ -7,4 +7,7 @@ module.exports = {
 	LoginValidation: (data) => {
 		return auth.loginValidation.validate(data);
 	},
+	VerifyValidation: (data) => {
+		return auth.verifyValidation.validate(data)
+	}
 };
