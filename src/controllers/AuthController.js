@@ -4,7 +4,7 @@ const {
 	RegisterValidation,
 	LoginValidation,
 } = require('../helpers/validation');
-const { Register } = require('../models/Auth');
+const { Register, Login } = require('../models/Auth');
 
 module.exports = {
 	Register: async (req, res) => {
@@ -13,9 +13,13 @@ module.exports = {
 			const validation = RegisterValidation(data);
 			if (validation.error === undefined) {
 				data.password = hashSync(req.body.password, genSaltSync(1));
-				const result = await Register(data);
-				console.log(result);
-				// return response(res, true, validation, 200);
+                const emailCheck = await Login(data.email);
+                if(emailCheck.length === 0){
+                    const result = await Register(data)
+                    delete result.password
+                    return response(res, true, result, 200);
+                }
+                return response(res, false, 'Email has been registered', 401);
 			}
 			let errorMessage = validation.error.details[0].message;
 			errorMessage = errorMessage.replace(/"/g, '');
