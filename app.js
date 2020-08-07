@@ -5,6 +5,7 @@ const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const cors = require('cors');
 const database = require('./src/config/database');
+const routes = require('./src/routes');
 
 database.connect((err) => {
 	if (err) throw err;
@@ -13,7 +14,7 @@ database.connect((err) => {
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(morgan('dev'));
-
+app.use(routes);
 app.use(cors());
 app.use('/images', express.static('src/images'));
 app.get('*', (req, res) => {
