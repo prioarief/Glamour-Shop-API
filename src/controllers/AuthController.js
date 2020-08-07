@@ -5,6 +5,9 @@ const {
 	LoginValidation,
 } = require('../helpers/validation');
 const { Register, Login } = require('../models/Auth');
+const randomCode = require("randomatic")
+const {sendOTP} = require("../helpers/sendEmail")
+
 
 module.exports = {
 	Register: async (req, res) => {
@@ -16,6 +19,8 @@ module.exports = {
                 const emailCheck = await Login(data.email);
                 if(emailCheck.length === 0){
                     const result = await Register(data)
+                    data.code = randomCode('a0', 6)
+                    sendOTP(data)
                     delete result.password
                     return response(res, true, result, 200);
                 }
