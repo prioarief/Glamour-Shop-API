@@ -15,6 +15,7 @@ const {
 } = require('../models/Auth');
 const randomCode = require('randomatic');
 const { sendOTP } = require('../helpers/sendEmail');
+const {createToken} = require('../helpers/createToken');
 
 module.exports = {
 	Register: async (req, res) => {
@@ -36,11 +37,11 @@ module.exports = {
 					delete result.password;
 					return response(res, true, result, 200);
 				}
-				return response(res, false, 'Email has been registered', 401);
+				return response(res, false, 'Email has been registered', 400);
 			}
 			let errorMessage = validation.error.details[0].message;
 			errorMessage = errorMessage.replace(/"/g, '');
-			return response(res, false, errorMessage, 401);
+			return response(res, false, errorMessage, 400);
 		} catch (error) {
 			console.log(error);
 			return response(res, false, 'Internal Server Error', 500);
@@ -86,10 +87,21 @@ module.exports = {
 			const validation = LoginValidation(data);
 			if (validation.error === undefined) {
 				const emailCheck = await Login(data.email);
-
+				
 				if (emailCheck.length !== 0) {
-					return console.log(emailCheck);
+					if(emailCheck[0].is_active === 1){
+						if(compareSync(data.password, emailCheck[0].password)){
+							const token = createToken(emailCheck, process.env.JWT_KEY, '24h')
+							emailCheck[0].token = token
+							delete emailCheck[0].is_active
+							delete emailCheck[0].password
+							return response(res, true, emailCheck, 200)
+						}
+						return response(res, false, 'Password wrong', 400)
+					}
+					return response(res, false, 'Account is not verified', 400)
 				}
+				return response(res, false, 'Email is not registered', 404);
 			}
 			// const emailCheck = await Login
 		} catch (error) {
