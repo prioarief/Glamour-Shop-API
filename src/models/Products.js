@@ -28,4 +28,22 @@ module.exports = {
       });
     });
   },
+
+  addProductsModel: (data) => {
+    return new Promise((resolve, reject) => {
+      let sql = `INSERT INTO products SET ?`;
+      connection.query(sql, data, (error, result) => {
+        if (error) {
+          reject(error);
+        }
+
+        const newResult = {
+          id: result.insertId,
+          ...data,
+        };
+
+        resolve(newResult);
+      });
+    });
+  },
 };
