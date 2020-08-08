@@ -15,4 +15,17 @@ module.exports = {
       });
     });
   },
+
+  getProductDetailsModel: (id) => {
+    return new Promise((resolve, reject) => {
+      let sql = `SELECT products.id, products.products, products.image, products.description, products.stock, products.price, categories.category, products.created_at, products.updated_at FROM products INNER JOIN categories ON products.category_id = categories.id WHERE products.id = ?`;
+      connection.query(sql, id, (error, result) => {
+        if (error) {
+          reject(error);
+        }
+
+        resolve(result);
+      });
+    });
+  },
 };

@@ -1,7 +1,11 @@
 const { response } = require("../helpers/response");
-const { getAllProductsModel } = require("../models/Products");
+const {
+  getAllProductsModel,
+  getProductDetailsModel,
+} = require("../models/Products");
 
 module.exports = {
+  /* ====== SHOW ALL PRODUCTS ====== */
   getAllProducts: async (req, res) => {
     let search = req.query.search || "";
     let sort = req.query.sort || "created_at";
@@ -21,6 +25,23 @@ module.exports = {
       }
       return response(res, false, "Sorry... Products Not Found", 404);
     } catch (error) {
+      console.log(error);
+      return response(res, false, "Internal Server Error", 500);
+    }
+  },
+
+  /* ====== SHOW PRODUCT DETAILS ====== */
+  getProductDetails: async (req, res) => {
+    const id = req.params.id;
+
+    try {
+      const result = await getProductDetailsModel(id);
+      if (result[0]) {
+        return response(res, true, result, 200);
+      }
+      return response(res, false, `Product with ID = ${id} not found.`, 404);
+    } catch (error) {
+      console.log(error);
       return response(res, false, "Internal Server Error", 500);
     }
   },
