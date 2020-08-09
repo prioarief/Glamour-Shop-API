@@ -20,6 +20,28 @@ const schema = {
 			.required(),
 		image: joi.string()
 	}),
+	addAddressVal: joi.object({
+		user_id: joi.number().required(),
+		name: joi.string().required(),
+		type: joi.string().required(),
+		address: joi.string().required(),
+		telp: joi.string().min(12).max(13).required(),
+		city: joi.string().required(),
+		zipcode: joi.string().max(11).required(),
+		province: joi.string().required(),
+		country: joi.string().required(),
+	}),
+	editAddressVal: joi.object({
+		user_id: joi.number(),
+		name: joi.string(),
+		type: joi.string(),
+		address: joi.string(),
+		telp: joi.string().min(12).max(13),
+		city: joi.string(),
+		zipcode: joi.string().max(11),
+		province: joi.string(),
+		country: joi.string(),
+	}),
 };
 
 module.exports = schema;
