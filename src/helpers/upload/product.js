@@ -6,9 +6,9 @@ const storage = multer.diskStorage({
   },
   filename: (req, file, callback) => {
     const splitName = file.originalname.split(".");
+    const productName = req.body.products.split(" ").join("-");
     const ext = splitName.pop();
-    const newName = splitName.join("-");
-    callback(null, `${newName}-${Date.now()}.${ext}`);
+    callback(null, `${productName}-${Date.now()}.${ext}`);
   },
 });
 
@@ -20,6 +20,7 @@ const fileFilter = (req, file, callback) => {
   ) {
     callback(null, true);
   } else {
+    req.fileValidationError = `Only .jpeg, .png and .jpg images allowed!`;
     callback(null, false);
   }
 };
@@ -28,7 +29,7 @@ const upload = multer({
   storage: storage,
   fileFilter: fileFilter,
   limits: {
-    fileSize: 4 * 1000 * 1000,
+    fileSize: 4 * 1024 * 1024,
   },
 });
 

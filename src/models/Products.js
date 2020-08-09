@@ -3,6 +3,8 @@ const {
   queryGetAllProducts,
   queryGetProductDetails,
   queryAddProducts,
+  queryUpdateProducts,
+  queryDeleteProducts,
 } = require("../helpers/query/products");
 
 module.exports = {
@@ -48,6 +50,40 @@ module.exports = {
           ...data,
         };
 
+        resolve(newResult);
+      });
+    });
+  },
+
+  updateProductsModel: (data, id) => {
+    return new Promise((resolve, reject) => {
+      let sql = queryUpdateProducts();
+      connection.query(sql, [data, id], (error, result) => {
+        if (error) {
+          reject(error);
+        }
+
+        const newResult = {
+          id,
+          ...data,
+        };
+        resolve(newResult);
+      });
+    });
+  },
+
+  deleteProductsModel: (id) => {
+    return new Promise((resolve, reject) => {
+      let sql = queryDeleteProducts();
+      connection.query(sql, id, (error, result) => {
+        if (error) {
+          reject(error);
+        }
+
+        const newResult = {
+          id,
+          ...result,
+        };
         resolve(newResult);
       });
     });

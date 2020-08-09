@@ -10,4 +10,12 @@ module.exports = {
   queryAddProducts: () => {
     return `INSERT INTO products SET ?`;
   },
+
+  queryUpdateProducts: () => {
+    return `UPDATE products SET ? WHERE id=?`;
+  },
+
+  queryDeleteProducts: () => {
+    return `DELETE FROM products WHERE id=?`;
+  },
 };
