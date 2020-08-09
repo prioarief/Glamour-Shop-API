@@ -25,4 +25,53 @@ module.exports = {
       });
     });
   },
+
+  addCategoriesModel: (data) => {
+    return new Promise((resolve, reject) => {
+      connection.query(query.addCategories, data, (error, result) => {
+        if (error) {
+          reject(error);
+        }
+
+        const newResult = {
+          id: result.insertId,
+          ...data,
+        };
+
+        resolve(newResult);
+      });
+    });
+  },
+
+  updateCategoriesModel: (data, id) => {
+    return new Promise((resolve, reject) => {
+      connection.query(query.updateCategories, [data, id], (error, result) => {
+        if (error) {
+          reject(error);
+        }
+
+        const newResult = {
+          id,
+          ...data,
+        };
+        resolve(newResult);
+      });
+    });
+  },
+
+  deleteCategoriesModel: (id) => {
+    return new Promise((resolve, reject) => {
+      connection.query(query.deleteCategories, id, (error, result) => {
+        if (error) {
+          reject(error);
+        }
+
+        const newResult = {
+          id,
+          ...result,
+        };
+        resolve(newResult);
+      });
+    });
+  },
 };
