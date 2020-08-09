@@ -31,4 +31,7 @@ module.exports = {
   AddCategoriesValidation: (data) => {
     return categories.addCategoriesValidation.validate(data);
   },
+  UpdateCategoriesValidation: (data) => {
+    return categories.updateCategoriesValidation.validate(data);
+  },
 };
