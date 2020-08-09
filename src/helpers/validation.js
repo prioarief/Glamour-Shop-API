@@ -2,6 +2,7 @@ const auth = require("../middlewares/validation/auth");
 const profile = require("../middlewares/validation/profile");
 const products = require("../middlewares/validation/products");
 const categories = require("../middlewares/validation/categories");
+const colors = require("../middlewares/validation/colors");
 
 module.exports = {
   RegisterValidation: (data) => {
@@ -33,5 +34,11 @@ module.exports = {
   },
   UpdateCategoriesValidation: (data) => {
     return categories.updateCategoriesValidation.validate(data);
+  },
+  AddColorsValidation: (data) => {
+    return colors.addColorsValidation.validate(data);
+  },
+  UpdateColorsValidation: (data) => {
+    return colors.updateColorsValidation.validate(data);
   },
 };
