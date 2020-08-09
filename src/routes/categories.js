@@ -15,6 +15,6 @@ router.get("/", TokenCheck, getAllCategories);
 router.get("/:id", TokenCheck, getCategoryDetails);
 router.post("/", TokenCheck, checkRole, addCategories);
 router.put("/:id", TokenCheck, checkRole, updateCategories);
-router.delete("/:id", deleteCategories);
+router.delete("/:id", TokenCheck, checkRole, deleteCategories);
 
 module.exports = router;
