@@ -31,6 +31,17 @@ const schema = {
 		province: joi.string().required(),
 		country: joi.string().required(),
 	}),
+	editAddressVal: joi.object({
+		user_id: joi.number(),
+		name: joi.string(),
+		type: joi.string(),
+		address: joi.string(),
+		telp: joi.string().min(12).max(13),
+		city: joi.string(),
+		zipcode: joi.string().max(11),
+		province: joi.string(),
+		country: joi.string(),
+	}),
 };
 
 module.exports = schema;

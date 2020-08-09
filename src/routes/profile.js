@@ -1,10 +1,12 @@
 const express = require('express');
 const tokenCheck = require('../middlewares/TokenCheck');
-const { editProfile, getMyAddress } = require('../controllers/ProfileController');
+const { editProfile, insertMyAddress, editMyAddress } = require('../controllers/ProfileController');
 const router = express.Router();
 const ImageFilter = require('../middlewares/ImageFilter');
 
 router.put('/', tokenCheck, ImageFilter, editProfile);
-router.get('/my-address', tokenCheck, getMyAddress)
+router.post('/my-address', tokenCheck, insertMyAddress)
+// router.get('/my-address', tokenCheck, getMyAddress)
+router.put('/my-address/:id', tokenCheck, editMyAddress)
 
 module.exports = router;

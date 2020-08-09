@@ -36,4 +36,18 @@ module.exports = {
 			});
 		});
 	},
+	editAddress: (data, id) => {
+		return new Promise((resolve, reject) => {
+			connection.query(query.editAdress, [data, id], (error, result) => {
+				if (error) {
+					return reject(error);
+				}
+				const response = {
+					id: id,
+					...data,
+				};
+				resolve(response);
+			});
+		});
+	},
 };

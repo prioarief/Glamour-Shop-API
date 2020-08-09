@@ -1,7 +1,7 @@
 const { genSaltSync, compareSync, hashSync } = require('bcrypt');
 const { response } = require('../helpers/response');
-const { editValidation, addAddressVal } = require('../helpers/validation');
-const { editUser, getData, addAddress } = require('../models/Profile');
+const { editValidation, addAddressVal, editAddressVal } = require('../helpers/validation');
+const { editUser, getData, addAddress, editAddress } = require('../models/Profile');
 const fs = require('fs');
 
 module.exports = {
@@ -36,7 +36,7 @@ module.exports = {
 		}
 	},
 
-	getMyAddress: async (req, res) => {
+	insertMyAddress: async (req, res) => {
 		try {
 			const id = req.decoded.result[0].id;
 			const data = req.body;
@@ -44,6 +44,26 @@ module.exports = {
 			const validate = addAddressVal(data);
 			if (validate.error === undefined) {
 				const result = await addAddress(data)
+				if(result){
+					return response(res, true, result, 200);
+				}
+			}
+			let errorMessage = validate.error.details[0].message;
+			errorMessage = errorMessage.replace(/"/g, '');
+			return response(res, false, errorMessage, 400);
+		} catch (error) {
+			console.log(error);
+			return response(res, false, 'Internal Server Error', 500);
+		}
+	},
+	
+	editMyAddress: async (req, res) => {
+		try {
+			const id = req.params.id;
+			const data = req.body;
+			const validate = editAddressVal(data);
+			if (validate.error === undefined) {
+				const result = await editAddress(data, id)
 				if(result){
 					return response(res, true, result, 200);
 				}

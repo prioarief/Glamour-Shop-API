@@ -1,11 +1,18 @@
 const connection = require("../config/database");
+const {
+  queryGetAllProducts,
+  queryGetProductDetails,
+  queryAddProducts,
+  queryUpdateProducts,
+  queryDeleteProducts,
+} = require("../helpers/query/products");
 
 module.exports = {
   getAllProductsModel: (search, sort, order, limit, page) => {
     let keyword = `%${search}%`;
     let end = limit * page - limit;
     return new Promise((resolve, reject) => {
-      let sql = `SELECT products.id, products.products, products.image, products.description, products.stock, products.price, categories.category, products.created_at, products.updated_at FROM products INNER JOIN categories ON products.category_id = categories.id WHERE products LIKE ? OR categories.category LIKE ? ORDER BY ${sort} ${order} LIMIT ? OFFSET ?`;
+      const sql = queryGetAllProducts(sort, order);
       connection.query(sql, [keyword, keyword, limit, end], (error, result) => {
         if (error) {
           reject(error);
@@ -18,7 +25,7 @@ module.exports = {
 
   getProductDetailsModel: (id) => {
     return new Promise((resolve, reject) => {
-      let sql = `SELECT products.id, products.products, products.image, products.description, products.stock, products.price, categories.category, products.created_at, products.updated_at FROM products INNER JOIN categories ON products.category_id = categories.id WHERE products.id = ?`;
+      const sql = queryGetProductDetails();
       connection.query(sql, id, (error, result) => {
         if (error) {
           reject(error);
@@ -31,7 +38,8 @@ module.exports = {
 
   addProductsModel: (data) => {
     return new Promise((resolve, reject) => {
-      let sql = `INSERT INTO products SET ?`;
+      //   let sql = `INSERT INTO products SET ?`;
+      const sql = queryAddProducts();
       connection.query(sql, data, (error, result) => {
         if (error) {
           reject(error);
@@ -42,6 +50,40 @@ module.exports = {
           ...data,
         };
 
+        resolve(newResult);
+      });
+    });
+  },
+
+  updateProductsModel: (data, id) => {
+    return new Promise((resolve, reject) => {
+      let sql = queryUpdateProducts();
+      connection.query(sql, [data, id], (error, result) => {
+        if (error) {
+          reject(error);
+        }
+
+        const newResult = {
+          id,
+          ...data,
+        };
+        resolve(newResult);
+      });
+    });
+  },
+
+  deleteProductsModel: (id) => {
+    return new Promise((resolve, reject) => {
+      let sql = queryDeleteProducts();
+      connection.query(sql, id, (error, result) => {
+        if (error) {
+          reject(error);
+        }
+
+        const newResult = {
+          id,
+          ...result,
+        };
         resolve(newResult);
       });
     });
