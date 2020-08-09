@@ -15,7 +15,7 @@ const {
 } = require('../models/Auth');
 const randomCode = require('randomatic');
 const { sendOTP } = require('../helpers/sendEmail');
-const {createToken} = require('../helpers/createToken');
+const { createToken } = require('../helpers/createToken');
 
 module.exports = {
 	Register: async (req, res) => {
@@ -55,7 +55,6 @@ module.exports = {
 			if (validation.error === undefined) {
 				const codeCheck = await checkOTP(data.email);
 				const emailCheck = await Login(data.email);
-
 				if (emailCheck.length !== 0) {
 					if (codeCheck.length !== 0) {
 						if (
@@ -69,14 +68,14 @@ module.exports = {
 							await deleteOTP(data.email);
 							return response(res, true, 'Verification Success', 200);
 						}
-						return console.log('no');
+						return response(res, false, 'Code is wrong', 400);
 					}
-					return console.log(emailCheck);
+					return response(res, false, 'Email is not registered', 404);
 				}
 			}
 			let errorMessage = validation.error.details[0].message;
 			errorMessage = errorMessage.replace(/"/g, '');
-			console.log(errorMessage);
+			return response(res, false, errorMessage, 400);
 		} catch (error) {
 			console.log(error);
 		}
@@ -85,25 +84,29 @@ module.exports = {
 		try {
 			const data = req.body;
 			const validation = LoginValidation(data);
+			// validation check
 			if (validation.error === undefined) {
 				const emailCheck = await Login(data.email);
-				
 				if (emailCheck.length !== 0) {
-					if(emailCheck[0].is_active === 1){
-						if(compareSync(data.password, emailCheck[0].password)){
-							const token = createToken(emailCheck, process.env.JWT_KEY, '24h')
-							emailCheck[0].token = token
-							delete emailCheck[0].is_active
-							delete emailCheck[0].password
-							return response(res, true, emailCheck, 200)
+					if (emailCheck[0].is_active === 1) {
+						// password check
+						if (compareSync(data.password, emailCheck[0].password)) {
+							delete emailCheck[0].is_active;
+							delete emailCheck[0].password;
+							// create token
+							const token = createToken(emailCheck, process.env.JWT_KEY, '24h');
+							emailCheck[0].token = token;
+							return response(res, true, emailCheck, 200);
 						}
-						return response(res, false, 'Password wrong', 400)
+						return response(res, false, 'Password wrong', 400);
 					}
-					return response(res, false, 'Account is not verified', 400)
+					return response(res, false, 'Account is not verified', 400);
 				}
 				return response(res, false, 'Email is not registered', 404);
 			}
-			// const emailCheck = await Login
+			let errorMessage = validation.error.details[0].message;
+			errorMessage = errorMessage.replace(/"/g, '');
+			return response(res, false, errorMessage, 400);
 		} catch (error) {
 			console.log(error);
 		}
