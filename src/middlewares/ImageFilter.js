@@ -1,4 +1,4 @@
-const upload = require("../helpers/uploadUserImage");
+const upload = require("../helpers/upload/users");
 const {response} = require("../helpers/response");
 const ImageFilter = upload.single('image')
 module.exports = (req, res, next) => {
