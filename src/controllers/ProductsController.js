@@ -4,6 +4,7 @@ const {
   getProductDetailsModel,
   addProductsModel,
   updateProductsModel,
+  deleteProductsModel,
 } = require("../models/Products");
 const {
   AddProductsValidation,
@@ -109,6 +110,25 @@ module.exports = {
       return response(res, false, errorMsg, 400);
     } catch (error) {
       console.log(error);
+      return response(res, true, "Internal Server Error", 500);
+    }
+  },
+
+  /* ====== UPDATE PRODUCTS ====== */
+  deleteProducts: async (req, res) => {
+    const id = req.params.id;
+    try {
+      const data = await getProductDetailsModel(id);
+      const result = await deleteProductsModel(id);
+      if (result.affectedRows == 1) {
+        const image = data[0].image;
+        fs.unlinkSync(`./src/images/products/${image}`);
+        return response(res, true, result, 200);
+      }
+      return response(res, true, `Data with ID = ${id} Not Found`, 404);
+    } catch (error) {
+      console.log(error);
+      return response(res, true, "Internal Server Error", 500);
     }
   },
 };

@@ -6,11 +6,12 @@ const {
   addProducts,
   updateProducts,
 } = require("../controllers/ProductsController");
-const upload = require("../helpers/upload/product");
+// const upload = require("../helpers/upload/product");
+const imageFilter = require("../middlewares/ImageFilter");
 
 router.get("/", getAllProducts);
 router.get("/:id", getProductDetails);
-router.post("/", upload.single("image"), addProducts);
-router.put("/:id", upload.single("image"), updateProducts);
+router.post("/", imageFilter, addProducts);
+router.put("/:id", imageFilter, updateProducts);
 
 module.exports = router;
