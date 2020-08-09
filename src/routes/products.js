@@ -5,13 +5,14 @@ const {
   getProductDetails,
   addProducts,
   updateProducts,
+  deleteProducts,
 } = require("../controllers/ProductsController");
-// const upload = require("../helpers/upload/product");
-const imageFilter = require("../middlewares/ImageFilter");
+const imageFilter = require("../middlewares/ImageFilterProducts");
 
 router.get("/", getAllProducts);
 router.get("/:id", getProductDetails);
 router.post("/", imageFilter, addProducts);
 router.put("/:id", imageFilter, updateProducts);
+router.delete("/:id", deleteProducts);
 
 module.exports = router;
