@@ -13,5 +13,8 @@ module.exports = {
 	},
 	editValidation: (data) => {
 		return profile.editValidation.validate(data)
+	},
+	addAddressVal: (data) => {
+		return profile.addAddressVal.validate(data)
 	}
 };
