@@ -1,7 +1,7 @@
 const { genSaltSync, compareSync, hashSync } = require('bcrypt');
 const { response } = require('../helpers/response');
 const { editValidation, addAddressVal, editAddressVal } = require('../helpers/validation');
-const { editUser, getData, addAddress, editAddress } = require('../models/Profile');
+const { editUser, getData, addAddress, editAddress, getMyAddress, getDetailMyAddress, deleteMyAddress } = require('../models/Profile');
 const fs = require('fs');
 
 module.exports = {
@@ -63,14 +63,69 @@ module.exports = {
 			const data = req.body;
 			const validate = editAddressVal(data);
 			if (validate.error === undefined) {
-				const result = await editAddress(data, id)
-				if(result){
-					return response(res, true, result, 200);
+				const checkData = await getDetailMyAddress(id)
+				if(checkData.length === 1){
+					const result = await editAddress(data, id)
+					if(result){
+						return response(res, true, result, 200);
+					}
 				}
+				return response(res, false, 'Data not found', 404);
 			}
 			let errorMessage = validate.error.details[0].message;
 			errorMessage = errorMessage.replace(/"/g, '');
 			return response(res, false, errorMessage, 400);
+		} catch (error) {
+			console.log(error);
+			return response(res, false, 'Internal Server Error', 500);
+		}
+	},
+	
+	getMyAddress: async (req, res) => {
+		try {
+			const id = req.decoded.result[0].id;
+			if(id){
+				const result = await getMyAddress(id)
+				return response(res, true, result, 200)
+			}
+			return response(res, false, 'id is null', 400);
+		} catch (error) {
+			console.log(error);
+			return response(res, false, 'Internal Server Error', 500);
+		}
+	},
+	
+	getDetailMyAddress: async (req, res) => {
+		try {
+			const id = req.params.id;
+			if(id){
+				const result = await getDetailMyAddress(id)
+				if(result.length === 1) {
+					return response(res, true, result, 200)
+				}
+				return response(res, false, 'Data not found', 404)
+			}
+			return response(res, false, 'id is null', 400);
+		} catch (error) {
+			console.log(error);
+			return response(res, false, 'Internal Server Error', 500);
+		}
+	},
+	deleteMyAddress: async (req, res) => {
+		try {
+			const id = req.params.id;
+			if(id){
+				const result = await getDetailMyAddress(id)
+				if(result.length === 1) {
+					const deleted = await deleteMyAddress(id)
+					if(deleted.affectedRows === 1){
+						return response(res, true, `Data with ${id} has been deleted`, 200)
+					}
+					return response(res, false, `Data with ${id} has not been deleted`, 400)
+				}
+				return response(res, false, 'Data not found', 404)
+			}
+			return response(res, false, 'id is null', 400);
 		} catch (error) {
 			console.log(error);
 			return response(res, false, 'Internal Server Error', 500);
