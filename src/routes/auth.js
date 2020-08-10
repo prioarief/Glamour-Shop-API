@@ -4,7 +4,6 @@ const {
 	Verification,
 	Login,
 } = require('../controllers/AuthController');
-const tokenCheck = require('../middlewares/TokenCheck');
 const router = express.Router();
 
 router.post('/register', Register);
