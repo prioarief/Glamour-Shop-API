@@ -26,6 +26,18 @@ module.exports = {
     });
   },
 
+  getColorByNameModel: (name) => {
+    return new Promise((resolve, reject) => {
+      connection.query(query.getColorByName, name, (error, result) => {
+        if (error) {
+          reject(error);
+        }
+
+        resolve(result);
+      });
+    });
+  },
+
   addColorsModel: (data) => {
     return new Promise((resolve, reject) => {
       connection.query(query.addColors, data, (error, result) => {

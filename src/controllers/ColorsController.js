@@ -9,6 +9,7 @@ const {
   addColorsModel,
   updateColorsModel,
   deleteColorsModel,
+  getColorByNameModel,
 } = require("../models/Colors");
 
 module.exports = {
@@ -44,15 +45,23 @@ module.exports = {
   /* ============ ADD Colors ============ */
   addColors: async (req, res) => {
     const data = req.body;
+    const oldData = await getColorByNameModel(data.color);
+    const existName = {
+      ...oldData[0],
+    };
     try {
-      const validation = AddColorsValidation(data);
-      if (validation.error === undefined) {
-        const result = await addColorsModel(data);
-        return response(res, true, result, 201);
+      if (data.color === existName.color) {
+        return response(res, false, "Color name is already exist!", 401);
+      } else {
+        const validation = AddColorsValidation(data);
+        if (validation.error === undefined) {
+          const result = await addColorsModel(data);
+          return response(res, true, result, 201);
+        }
+        let errorMsg = validation.error.details[0].message;
+        errorMsg = errorMsg.replace(/"/g, "");
+        return response(res, false, errorMsg, 400);
       }
-      let errorMsg = validation.error.details[0].message;
-      errorMsg = errorMsg.replace(/"/g, "");
-      return response(res, false, errorMsg, 400);
     } catch (error) {
       console.log(error);
       return response(res, false, "Internal Server Error", 500);

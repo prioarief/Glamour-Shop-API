@@ -2,11 +2,11 @@ const joi = require("@hapi/joi");
 
 const schema = {
   addColorsValidation: joi.object({
-    category: joi.string().required(),
+    color: joi.string().required(),
   }),
 
   updateColorsValidation: joi.object({
-    category: joi.string().required(),
+    color: joi.string().required(),
   }),
 };
 
