@@ -11,7 +11,7 @@ const imageFilter = require("../middlewares/ImageFilterProducts");
 const TokenCheck = require("../middlewares/TokenCheck");
 const { checkRole } = require("../middlewares/RoleCheck");
 
-router.get("/", getAllProducts);
+router.get("/", TokenCheck, getAllProducts);
 router.get("/:id", TokenCheck, getProductDetails);
 router.post("/", TokenCheck, checkRole, imageFilter, addProducts);
 router.put("/:id", TokenCheck, checkRole, imageFilter, updateProducts);
