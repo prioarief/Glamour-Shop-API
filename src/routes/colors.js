@@ -11,10 +11,10 @@ const {
   deleteColors,
 } = require("../controllers/ColorsController");
 
-router.get("/", getAllColors);
-router.get("/:id", getColorDetails);
-router.post("/", /* TokenCheck, checkRole,*/ addColors);
-router.put("/:id", /* TokenCheck, checkRole, */ updateColors);
-router.delete("/:id", /* TokenCheck, checkRole, */ deleteColors);
+router.get("/", TokenCheck, getAllColors);
+router.get("/:id", TokenCheck, getColorDetails);
+router.post("/", TokenCheck, checkRole, addColors);
+router.put("/:id", TokenCheck, checkRole, updateColors);
+router.delete("/:id", TokenCheck, checkRole, deleteColors);
 
 module.exports = router;
