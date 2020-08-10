@@ -2,6 +2,7 @@ const auth = require('../middlewares/validation/auth');
 const profile = require('../middlewares/validation/profile');
 const products = require('../middlewares/validation/products');
 const transaction = require('../middlewares/validation/transaction');
+const categories = require('../middlewares/validation/categories');
 
 module.exports = {
 	RegisterValidation: (data) => {
@@ -30,5 +31,11 @@ module.exports = {
 	},
 	insertTransactionVal: (data) => {
 		return transaction.insertTransaction.validate(data)
-	}
+  },
+  AddCategoriesValidation: (data) => {
+    return categories.addCategoriesValidation.validate(data);
+  },
+  UpdateCategoriesValidation: (data) => {
+    return categories.updateCategoriesValidation.validate(data);
+  },
 };
