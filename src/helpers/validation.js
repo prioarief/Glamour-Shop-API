@@ -4,6 +4,7 @@ const products = require("../middlewares/validation/products");
 const transaction = require("../middlewares/validation/transaction");
 const categories = require("../middlewares/validation/categories");
 const colors = require("../middlewares/validation/colors");
+const sizes = require("../middlewares/validation/sizes");
 
 module.exports = {
   RegisterValidation: (data) => {
@@ -44,5 +45,11 @@ module.exports = {
   },
   UpdateColorsValidation: (data) => {
     return colors.updateColorsValidation.validate(data);
+  },
+  AddSizesValidation: (data) => {
+    return sizes.addSizesValidation.validate(data);
+  },
+  UpdateSizesValidation: (data) => {
+    return sizes.updateSizesValidation.validate(data);
   },
 };
