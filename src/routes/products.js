@@ -9,7 +9,7 @@ const {
 } = require("../controllers/ProductsController");
 const imageFilter = require("../middlewares/ImageFilterProducts");
 const TokenCheck = require("../middlewares/TokenCheck");
-const {checkRole} = require("../middlewares/RoleCheck");
+const { checkRole } = require("../middlewares/RoleCheck");
 
 router.get("/", TokenCheck, getAllProducts);
 router.get("/:id", TokenCheck, getProductDetails);

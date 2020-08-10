@@ -13,13 +13,17 @@ module.exports = {
     let end = limit * page - limit;
     return new Promise((resolve, reject) => {
       const sql = queryGetAllProducts(sort, order);
-      connection.query(sql, [keyword, keyword, limit, end], (error, result) => {
-        if (error) {
-          reject(error);
-        }
+      connection.query(
+        sql,
+        [keyword, keyword, keyword, keyword, limit, end],
+        (error, result) => {
+          if (error) {
+            reject(error);
+          }
 
-        resolve(result);
-      });
+          resolve(result);
+        }
+      );
     });
   },
 
@@ -38,7 +42,6 @@ module.exports = {
 
   addProductsModel: (data) => {
     return new Promise((resolve, reject) => {
-      //   let sql = `INSERT INTO products SET ?`;
       const sql = queryAddProducts();
       connection.query(sql, data, (error, result) => {
         if (error) {

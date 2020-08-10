@@ -8,6 +8,8 @@ const schema = {
     stock: joi.number().required(),
     price: joi.number().required(),
     category_id: joi.number().required(),
+    size_id: joi.number().required(),
+    color_id: joi.number().required(),
   }),
 
   updateProductsValidation: joi.object({
@@ -17,6 +19,8 @@ const schema = {
     stock: joi.number().required(),
     price: joi.number().required(),
     category_id: joi.number().required(),
+    size_id: joi.number().required(),
+    color_id: joi.number().required(),
   }),
 };
 
