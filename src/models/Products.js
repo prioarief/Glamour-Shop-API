@@ -42,7 +42,6 @@ module.exports = {
 
   addProductsModel: (data) => {
     return new Promise((resolve, reject) => {
-      //   let sql = `INSERT INTO products SET ?`;
       const sql = queryAddProducts();
       connection.query(sql, data, (error, result) => {
         if (error) {
