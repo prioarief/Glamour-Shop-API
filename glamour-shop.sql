@@ -1,13 +1,14 @@
 -- phpMyAdmin SQL Dump
--- version 5.0.2
+-- version 4.8.4
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 11 Agu 2020 pada 06.06
--- Versi server: 10.4.13-MariaDB
--- Versi PHP: 7.4.7
+-- Waktu pembuatan: 11 Agu 2020 pada 06.32
+-- Versi server: 10.1.37-MariaDB
+-- Versi PHP: 7.3.0
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
 
@@ -20,6 +21,32 @@ SET time_zone = "+00:00";
 --
 -- Database: `glamour-shop`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `address`
+--
+
+CREATE TABLE `address` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `type` varchar(256) NOT NULL COMMENT 'like home, office',
+  `name` varchar(256) NOT NULL,
+  `address` text NOT NULL,
+  `telp` varchar(13) NOT NULL,
+  `city` varchar(256) NOT NULL,
+  `province` varchar(256) NOT NULL,
+  `zipcode` varchar(11) NOT NULL,
+  `country` varchar(256) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data untuk tabel `address`
+--
+
+INSERT INTO `address` (`id`, `user_id`, `type`, `name`, `address`, `telp`, `city`, `province`, `zipcode`, `country`) VALUES
+(5, 16, 'home', 'Prio Arief Gunawan', 'Jl. Doang jadian kagaaa', '089609807495', 'Jakarta Selatan', 'DKI Jakarta', '15113', 'Indonesia');
 
 -- --------------------------------------------------------
 
@@ -42,7 +69,7 @@ CREATE TABLE `cart` (
 CREATE TABLE `categories` (
   `id` int(11) NOT NULL,
   `category` varchar(256) NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -50,7 +77,7 @@ CREATE TABLE `categories` (
 --
 
 INSERT INTO `categories` (`id`, `category`, `created_at`) VALUES
-(1, 'Shirt', '2020-08-08 14:10:09');
+(1, 'Tshirt', '2020-08-09 14:27:58');
 
 -- --------------------------------------------------------
 
@@ -85,13 +112,6 @@ CREATE TABLE `otp` (
   `email` varchar(256) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
---
--- Dumping data untuk tabel `otp`
---
-
-INSERT INTO `otp` (`id`, `code`, `email`) VALUES
-(3, '4i5bx0', 'dimasdompit@gmail.com');
-
 -- --------------------------------------------------------
 
 --
@@ -108,8 +128,8 @@ CREATE TABLE `products` (
   `category_id` int(11) NOT NULL,
   `size_id` int(11) NOT NULL,
   `color_id` int(11) NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  `updated_at` timestamp NOT NULL DEFAULT current_timestamp()
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -117,10 +137,9 @@ CREATE TABLE `products` (
 --
 
 INSERT INTO `products` (`id`, `products`, `image`, `description`, `stock`, `price`, `category_id`, `size_id`, `color_id`, `created_at`, `updated_at`) VALUES
-(1, 'Product Edit 3', 'Product-Edit-3-1596969028991.jpg', 'Testing update product 1', 10, 100, 1, 1, 1, '2020-08-08 14:12:47', '2020-08-08 14:12:47'),
-(10, 'Product Test', 'Product-Test-1596951093118.jpg', 'Test deskripsi', 12, 100, 1, 1, 2, '2020-08-09 05:31:33', '2020-08-09 05:31:33'),
-(11, 'Product Test ID 11', 'Product-Test-ID-11-1596976799302.jpg', 'Testing update product 11', 10, 100, 1, 2, 5, '2020-08-09 12:19:51', '2020-08-09 12:19:51'),
-(12, 'Product Test ID 12', 'Product-Test-ID-12-1597078255694.jpg', 'Testing update product 12', 10, 150, 1, 1, 1, '2020-08-10 16:48:55', '2020-08-10 16:48:55');
+(5, 'Mbaker', 'Mbaker-1597119811064.png', 'mantap', 10, 20, 1, 1, 1, '2020-08-11 04:23:31', '2020-08-11 04:23:31'),
+(6, 'Mbaker', 'Mbaker-1597120156922.png', 'mantap', 10, 20, 1, 1, 1, '2020-08-11 04:29:16', '2020-08-11 04:29:16'),
+(7, 'Mbaker', 'Mbaker-1597120244782.png', 'mantap', 10, 20, 1, 1, 1, '2020-08-11 04:30:44', '2020-08-11 04:30:44');
 
 -- --------------------------------------------------------
 
@@ -144,6 +163,33 @@ INSERT INTO `sizes` (`id`, `size`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Struktur dari tabel `transactions`
+--
+
+CREATE TABLE `transactions` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `total` int(11) NOT NULL,
+  `ordered_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data untuk tabel `transactions`
+--
+
+INSERT INTO `transactions` (`id`, `user_id`, `total`, `ordered_at`) VALUES
+(1, 16, 100, '2020-08-09 15:59:54'),
+(2, 16, 100, '2020-08-09 16:01:14'),
+(3, 16, 100, '2020-08-09 16:06:59'),
+(4, 16, 100, '2020-08-09 16:08:22'),
+(5, 16, 200, '2020-08-09 16:15:34'),
+(6, 16, 200, '2020-08-09 16:17:06'),
+(7, 16, 200, '2020-08-09 16:34:53'),
+(8, 16, 200, '2020-08-09 16:36:13');
+
+-- --------------------------------------------------------
+
+--
 -- Struktur dari tabel `transaction_detail`
 --
 
@@ -154,18 +200,26 @@ CREATE TABLE `transaction_detail` (
   `qty` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
--- --------------------------------------------------------
-
 --
--- Struktur dari tabel `transactons`
+-- Dumping data untuk tabel `transaction_detail`
 --
 
-CREATE TABLE `transactons` (
-  `id` int(11) NOT NULL,
-  `user_id` int(11) NOT NULL,
-  `total` int(11) NOT NULL,
-  `ordered_at` timestamp NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+INSERT INTO `transaction_detail` (`id`, `transaction_id`, `product_id`, `qty`) VALUES
+(1, 1, 1, 2),
+(2, 1, 2, 12),
+(3, 1, 3, 10),
+(4, 4, 1, 2),
+(5, 4, 2, 12),
+(6, 4, 3, 10),
+(7, 5, 1, 2),
+(8, 5, 2, 12),
+(9, 5, 3, 10),
+(10, 6, 1, 2),
+(11, 6, 1, 2),
+(12, 7, 1, 2),
+(13, 7, 1, 2),
+(14, 8, 1, 2),
+(15, 8, 1, 2);
 
 -- --------------------------------------------------------
 
@@ -178,23 +232,31 @@ CREATE TABLE `users` (
   `email` varchar(256) NOT NULL,
   `name` varchar(256) NOT NULL,
   `password` text NOT NULL,
-  `role` int(11) NOT NULL,
+  `role` int(1) NOT NULL DEFAULT '0',
+  `birthday_date` date DEFAULT NULL,
+  `image` varchar(256) NOT NULL DEFAULT 'user-default.png',
   `is_active` int(11) NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  `updated_at` timestamp NOT NULL DEFAULT current_timestamp()
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data untuk tabel `users`
 --
 
-INSERT INTO `users` (`id`, `email`, `name`, `password`, `role`, `is_active`, `created_at`, `updated_at`) VALUES
-(13, 'hello.prioarief@gmail.com', 'Prio Arief Gunawan', '$2b$04$6mCxby1dDcpPPEh0eA1ToOjsP.Gvd44dp6dgVUb1h4PPjkzb5s.aq', 0, 0, '2020-08-07 15:51:45', '2020-08-07 15:51:45'),
-(17, 'dimasdompit@gmail.com', 'Dimas Mokodompit 2', '$2b$04$cZosV7WhwD2wKcbQPuNrruAprXz7y9.x0Vy7CFkguF12z3IcJRsca', 0, 1, '2020-08-11 03:54:08', '2020-08-11 03:54:08');
+INSERT INTO `users` (`id`, `email`, `name`, `password`, `role`, `birthday_date`, `image`, `is_active`, `created_at`, `updated_at`) VALUES
+(16, 'hello.prioarief@gmail.com', 'prio', '$2b$04$Ei4R8SpMZq855QafnfM0lex0QQ6AAfuMuuRk1CQjwTxIWEuvUPZSm', 1, '2020-08-09', '1596965062634-16.jpg', 1, '2020-08-07 16:25:34', '2020-08-07 16:25:34'),
+(17, 'prioariefgunawangunawan@gmail.com', 'Prio Arief Gunawan', '$2b$04$5h.fPYQajUDClZSKuDyQpOFrd/JHPD/lGHCHesk14s1pTZnx4k9H2', 0, NULL, 'user-default.png', 1, '2020-08-08 11:34:01', '2020-08-08 11:34:01');
 
 --
 -- Indexes for dumped tables
 --
+
+--
+-- Indeks untuk tabel `address`
+--
+ALTER TABLE `address`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indeks untuk tabel `cart`
@@ -225,9 +287,7 @@ ALTER TABLE `otp`
 --
 ALTER TABLE `products`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `category_id` (`category_id`),
-  ADD KEY `products_ibfk_2` (`size_id`),
-  ADD KEY `products_ibfk_3` (`color_id`);
+  ADD KEY `category_id` (`category_id`);
 
 --
 -- Indeks untuk tabel `sizes`
@@ -236,19 +296,19 @@ ALTER TABLE `sizes`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indeks untuk tabel `transactions`
+--
+ALTER TABLE `transactions`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `user_id` (`user_id`);
+
+--
 -- Indeks untuk tabel `transaction_detail`
 --
 ALTER TABLE `transaction_detail`
   ADD PRIMARY KEY (`id`),
   ADD KEY `transaction_id` (`transaction_id`),
-  ADD KEY `product_id` (`product_id`);
-
---
--- Indeks untuk tabel `transactons`
---
-ALTER TABLE `transactons`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `user_id` (`user_id`);
+  ADD KEY `transaction_detail_ibfk_2` (`product_id`);
 
 --
 -- Indeks untuk tabel `users`
@@ -262,10 +322,16 @@ ALTER TABLE `users`
 --
 
 --
+-- AUTO_INCREMENT untuk tabel `address`
+--
+ALTER TABLE `address`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
 -- AUTO_INCREMENT untuk tabel `categories`
 --
 ALTER TABLE `categories`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT untuk tabel `colors`
@@ -277,13 +343,13 @@ ALTER TABLE `colors`
 -- AUTO_INCREMENT untuk tabel `otp`
 --
 ALTER TABLE `otp`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT untuk tabel `products`
 --
 ALTER TABLE `products`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT untuk tabel `sizes`
@@ -292,16 +358,16 @@ ALTER TABLE `sizes`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
+-- AUTO_INCREMENT untuk tabel `transactions`
+--
+ALTER TABLE `transactions`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+
+--
 -- AUTO_INCREMENT untuk tabel `transaction_detail`
 --
 ALTER TABLE `transaction_detail`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT untuk tabel `transactons`
---
-ALTER TABLE `transactons`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT untuk tabel `users`
@@ -323,22 +389,19 @@ ALTER TABLE `cart`
 -- Ketidakleluasaan untuk tabel `products`
 --
 ALTER TABLE `products`
-  ADD CONSTRAINT `products_ibfk_1` FOREIGN KEY (`category_id`) REFERENCES `categories` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `products_ibfk_2` FOREIGN KEY (`size_id`) REFERENCES `sizes` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `products_ibfk_3` FOREIGN KEY (`color_id`) REFERENCES `colors` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `products_ibfk_1` FOREIGN KEY (`category_id`) REFERENCES `categories` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Ketidakleluasaan untuk tabel `transactions`
+--
+ALTER TABLE `transactions`
+  ADD CONSTRAINT `transactions_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Ketidakleluasaan untuk tabel `transaction_detail`
 --
 ALTER TABLE `transaction_detail`
-  ADD CONSTRAINT `transaction_detail_ibfk_1` FOREIGN KEY (`transaction_id`) REFERENCES `transactons` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `transaction_detail_ibfk_2` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
-
---
--- Ketidakleluasaan untuk tabel `transactons`
---
-ALTER TABLE `transactons`
-  ADD CONSTRAINT `transactons_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `transaction_detail_ibfk_1` FOREIGN KEY (`transaction_id`) REFERENCES `transactions` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
