@@ -48,7 +48,7 @@ module.exports = {
 	},
 	deleteOTP: (data) => {
 		return new Promise((resolve, reject) => {
-			connection.query(auth.deleteOTP, data, (error, result) => {
+			connection.query(query.deleteOTP, data, (error, result) => {
 				if (error) {
 					return reject(error);
 				}
