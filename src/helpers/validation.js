@@ -34,6 +34,9 @@ module.exports = {
   insertTransactionVal: (data) => {
     return transaction.insertTransaction.validate(data);
   },
+  insertCartVal: (data) => {
+    return transaction.insertCart.validate(data);
+  },
   AddCategoriesValidation: (data) => {
     return categories.addCategoriesValidation.validate(data);
   },
