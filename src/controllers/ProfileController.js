@@ -86,6 +86,8 @@ module.exports = {
 			const id = req.decoded.result[0].id;
 			if(id){
 				const result = await getMyAddress(id)
+				const redis = req.redis
+				redis.setex('address', 3600, JSON.stringify(result))
 				return response(res, true, result, 200)
 			}
 			return response(res, false, 'id is null', 400);
