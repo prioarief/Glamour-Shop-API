@@ -118,8 +118,8 @@ module.exports = {
 				const payload = jwt.verify(req.headers.token, process.env.JWT_KEY, {
 					ignoreExpiration: true,
 				});
-				const token = createToken(payload, process.env.JWT_KEY, '24h');
-				const RefreshToken = createToken(payload, process.env.JWT_KEY, '48h');
+				const token = createToken(payload.result, process.env.JWT_KEY, '24h');
+				const RefreshToken = createToken(payload.result, process.env.JWT_KEY, '48h');
 				const data = {
 					token: token,
 					refreeshToken: RefreshToken,
