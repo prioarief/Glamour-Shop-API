@@ -62,4 +62,62 @@ module.exports = {
             })
         })
     },
+    checkItems: (u_id, id) => {
+        return new Promise((resolve, reject) => {
+            connection.query(query.checkItems, [u_id, id], (error, result) => {
+                if(error) {
+                    return reject(error)
+                }
+                resolve(result)
+            })
+        })
+    },
+    checkAvailable: (id) => {
+        return new Promise((resolve, reject) => {
+            connection.query(query.checkAvailable, id, (error, result) => {
+                if(error) {
+                    return reject(error)
+                }
+                resolve(result)
+            })
+        })
+    },
+    insertCart: (data) => {
+        return new Promise((resolve, reject) => {
+            connection.query(query.insertCart, data, (error, result) => {
+                if(error) {
+                    return reject(error)
+                }
+                const response = {
+                    id: result.insertId,
+                    ...data
+                }
+                resolve(response)
+            })
+        })
+    },
+    updateCart: (data, id) => {
+        return new Promise((resolve, reject) => {
+            connection.query(query.updateCart, [data, id], (error, result) => {
+                if(error) {
+                    return reject(error)
+                }
+                const response = {
+                    id: id,
+                    ...data
+                }
+                resolve(response)
+            })
+        })
+    },
+    deleteCart: (id) => {
+        return new Promise((resolve, reject) => {
+            connection.query(query.deleteCart, id, (error, result) => {
+                if(error) {
+                    return reject(error)
+                }
+                resolve(result)
+            })
+        })
+    },
 }
