@@ -52,4 +52,10 @@ module.exports = {
   UpdateSizesValidation: (data) => {
     return sizes.updateSizesValidation.validate(data);
   },
+  forgotPassVal: (data) => {
+    return auth.forgotPassValidation.validate(data)
+  },
+  changePassVal: (data) => {
+    return auth.changePassValidation.validate(data)
+  },
 };

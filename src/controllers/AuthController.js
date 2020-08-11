@@ -4,6 +4,8 @@ const {
 	RegisterValidation,
 	LoginValidation,
 	VerifyValidation,
+	forgotPassVal,
+	changePassVal,
 } = require('../helpers/validation');
 const {
 	Register,
@@ -14,9 +16,11 @@ const {
 	updateUser,
 } = require('../models/Auth');
 const randomCode = require('randomatic');
-const { sendOTP } = require('../helpers/sendEmail');
+const { sendEmail } = require('../helpers/sendEmail');
 const { createToken } = require('../helpers/createToken');
 const jwt = require('jsonwebtoken');
+// Create an encryptor:
+const encryptor = require('simple-encryptor')('key256havdadugwsiDI983737289');
 
 module.exports = {
 	Register: async (req, res) => {
@@ -29,7 +33,7 @@ module.exports = {
 				if (emailCheck.length === 0) {
 					const result = await Register(data);
 					data.code = randomCode('a0', 6);
-					sendOTP(data);
+					sendEmail('OTP Code', data);
 					const otp = {
 						code: data.code,
 						email: result.email,
@@ -119,7 +123,11 @@ module.exports = {
 					ignoreExpiration: true,
 				});
 				const token = createToken(payload.result, process.env.JWT_KEY, '24h');
-				const RefreshToken = createToken(payload.result, process.env.JWT_KEY, '48h');
+				const RefreshToken = createToken(
+					payload.result,
+					process.env.JWT_KEY,
+					'48h'
+				);
 				const data = {
 					token: token,
 					refreeshToken: RefreshToken,
@@ -127,6 +135,54 @@ module.exports = {
 				return response(res, true, data, 200);
 			}
 			return response(res, false, 'Token not found', 400);
+		} catch (error) {
+			console.log(error);
+		}
+	},
+	ForgotPassword: async (req, res) => {
+		try {
+			const validation = forgotPassVal(req.body);
+			if (validation.error === undefined) {
+				const getUser = await Login(req.body.email);
+				if (getUser.length === 1) {
+					const encrypted = encryptor.encrypt(getUser[0].email);
+					const data = {
+						email: getUser[0].email,
+						name: getUser[0].name,
+						url: `${process.env.WEB_URL}/forgot-password/${encrypted}`,
+					};
+					sendEmail('Change Password', data);
+					return response(
+						res,
+						true,
+						'Check your email to change password',
+						200
+					);
+				}
+				return response(res, false, 'Email is not registered', 404);
+			}
+			let errorMessage = validation.error.details[0].message;
+			errorMessage = errorMessage.replace(/"/g, '');
+			return response(res, false, errorMessage, 400);
+		} catch (error) {
+			console.log(error);
+		}
+	},
+	ChangePassword: async (req, res) => {
+		try {
+			const data = {
+				email: encryptor.decrypt(req.body.email),
+				password: hashSync(req.body.password, genSaltSync(1)),
+			};
+			const validation = changePassVal(data);
+			if (validation.error === undefined) {
+				const result = await updateUser(data, data.email);
+				console.log(result);
+				return response(res, true, 'Check your email to change password', 200);
+			}
+			let errorMessage = validation.error.details[0].message;
+			errorMessage = errorMessage.replace(/"/g, '');
+			return response(res, false, errorMessage, 400);
 		} catch (error) {
 			console.log(error);
 		}

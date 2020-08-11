@@ -5,7 +5,7 @@ const mustache = require('mustache');
 const fs = require('fs');
 
 module.exports = {
-	sendOTP: (data) => {
+	sendEmail: (type, data) => {
 		const templateEmail = fs.readFileSync('./src/helpers/template.html', {
 			encoding: 'utf-8',
 		});
@@ -20,7 +20,7 @@ module.exports = {
 		const mailOptions = {
 			from: 'prioariefgunawangunawan@gmail.com',
 			to: data.email,
-			subject: 'OTP Code',
+			subject: type,
 			html: mustache.render(templateEmail, data),
 		};
 
