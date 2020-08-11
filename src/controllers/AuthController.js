@@ -16,6 +16,7 @@ const {
 const randomCode = require('randomatic');
 const { sendOTP } = require('../helpers/sendEmail');
 const { createToken } = require('../helpers/createToken');
+const jwt = require('jsonwebtoken');
 
 module.exports = {
 	Register: async (req, res) => {
@@ -107,6 +108,25 @@ module.exports = {
 			let errorMessage = validation.error.details[0].message;
 			errorMessage = errorMessage.replace(/"/g, '');
 			return response(res, false, errorMessage, 400);
+		} catch (error) {
+			console.log(error);
+		}
+	},
+	RefreshToken: async (req, res) => {
+		try {
+			if (req.headers.token) {
+				const payload = jwt.verify(req.headers.token, process.env.JWT_KEY, {
+					ignoreExpiration: true,
+				});
+				const token = createToken(payload.result, process.env.JWT_KEY, '24h');
+				const RefreshToken = createToken(payload.result, process.env.JWT_KEY, '48h');
+				const data = {
+					token: token,
+					refreeshToken: RefreshToken,
+				};
+				return response(res, true, data, 200);
+			}
+			return response(res, false, 'Token not found', 400);
 		} catch (error) {
 			console.log(error);
 		}
