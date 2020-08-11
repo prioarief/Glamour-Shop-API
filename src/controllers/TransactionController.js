@@ -55,6 +55,7 @@ module.exports = {
 	getDetailTransaction: async (req, res) => {
 		try {
 			const id = req.params.id
+			console.log(id)
 			const result = await getDetailTransactions(id);
 			return response(res, true, result, 200);
 		} catch (error) {
