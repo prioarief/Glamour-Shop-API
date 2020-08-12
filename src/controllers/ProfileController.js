@@ -45,6 +45,7 @@ module.exports = {
 			if (validate.error === undefined) {
 				const result = await addAddress(data)
 				if(result){
+					req.redis.del('address')
 					return response(res, true, result, 200);
 				}
 			}
@@ -67,6 +68,7 @@ module.exports = {
 				if(checkData.length === 1){
 					const result = await editAddress(data, id)
 					if(result){
+						req.redis.del('address')
 						return response(res, true, result, 200);
 					}
 				}
@@ -121,6 +123,7 @@ module.exports = {
 				if(result.length === 1) {
 					const deleted = await deleteMyAddress(id)
 					if(deleted.affectedRows === 1){
+						req.redis.del('address')
 						return response(res, true, `Data with ${id} has been deleted`, 200)
 					}
 					return response(res, false, `Data with ${id} has not been deleted`, 400)
