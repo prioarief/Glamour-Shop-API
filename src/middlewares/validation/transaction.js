@@ -4,6 +4,7 @@ const schema = {
   insertTransaction: joi.object({
     total: joi.number().required(),
     user_id: joi.number().required(),
+    shipping_address: joi.number().required(),
   }),
   insertCart: joi.object({
     product_id: joi.number().required(),
