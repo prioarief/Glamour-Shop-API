@@ -16,6 +16,8 @@ const {
 	insertCartVal,
 } = require('../helpers/validation');
 const { getProductDetailsModel } = require('../models/Products');
+const {payment} = require('../helpers/payment');
+const { getDetailMyAddress } = require('../models/Profile');
 
 module.exports = {
 	insertTransaction: async (req, res) => {
@@ -24,12 +26,19 @@ module.exports = {
 			const user_id = req.decoded.result[0].id;
 			const data = {
 				total: parseInt(req.body.total),
+				shipping_address: parseInt(req.body.address),
 				user_id: user_id,
 			};
 
 			const validation = insertTransactionVal(data);
 			if (validation.error === undefined) {
 				const inserted = await insertTransaction(data);
+				data.id = inserted.id
+				data.user = req.decoded.result[0]
+				const address = await getDetailMyAddress(inserted.shipping_address)
+				data.address = address[0]
+				const pay = await payment(data)
+				inserted.payment = pay
 				dummy.map(async (data) => {
 					data.transaction_id = inserted.id;
 					insertTransactionDetail(data);
