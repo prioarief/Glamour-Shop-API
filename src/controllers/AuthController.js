@@ -20,7 +20,7 @@ const { sendEmail } = require('../helpers/sendEmail');
 const { createToken } = require('../helpers/createToken');
 const jwt = require('jsonwebtoken');
 // Create an encryptor:
-const encryptor = require('simple-encryptor')('key256havdadugwsiDI983737289');
+const encryptor = require('simple-encryptor')('secretsecrettsecret');
 
 module.exports = {
 	Register: async (req, res) => {
@@ -142,10 +142,13 @@ module.exports = {
 	ForgotPassword: async (req, res) => {
 		try {
 			const validation = forgotPassVal(req.body);
+			console.log(req.body.email)
 			if (validation.error === undefined) {
 				const getUser = await Login(req.body.email);
 				if (getUser.length === 1) {
-					const encrypted = encryptor.encrypt(getUser[0].email);
+					let encrypted = encryptor.encrypt(getUser[0].email);
+					encrypted = encrypted.replace('/', '~')
+					console.log(encrypted)
 					const data = {
 						email: getUser[0].email,
 						name: getUser[0].name,
@@ -170,10 +173,12 @@ module.exports = {
 	},
 	ChangePassword: async (req, res) => {
 		try {
+			let email = await encryptor.decrypt(req.body.email.replace('~', '/'))
 			const data = {
-				email: encryptor.decrypt(req.body.email),
+				email: email,
 				password: hashSync(req.body.password, genSaltSync(1)),
 			};
+			console.log(email)
 			const validation = changePassVal(data);
 			if (validation.error === undefined) {
 				const result = await updateUser(data, data.email);
