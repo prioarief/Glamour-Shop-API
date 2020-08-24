@@ -11,6 +11,7 @@ module.exports = {
 		});
 		const transporter = nodemailer.createTransport({
 			service: 'gmail',
+			secure: false,
 			auth: {
 				user: USER_EMAIL,
 				pass: PASS_EMAIL,

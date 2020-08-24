@@ -142,25 +142,23 @@ module.exports = {
 	ForgotPassword: async (req, res) => {
 		try {
 			const validation = forgotPassVal(req.body);
-			console.log(req.body.email)
 			if (validation.error === undefined) {
-				const getUser = await Login(req.body.email);
-				if (getUser.length === 1) {
-					let encrypted = encryptor.encrypt(getUser[0].email);
-					encrypted = encrypted.replace('/', '~')
-					console.log(encrypted)
+				const emailCheck = await Login(req.body.email);
+				if (emailCheck.length === 1) {
+					let code = randomCode('a0', 6);
 					const data = {
-						email: getUser[0].email,
-						name: getUser[0].name,
-						url: `${process.env.WEB_URL}/forgot-password/${encrypted}`,
+						code: code,
+						email: emailCheck[0].email,
+						name: emailCheck[0].name,
 					};
-					sendEmail('Change Password', data);
-					return response(
-						res,
-						true,
-						'Check your email to change password',
-						200
-					);
+					sendEmail('OTP Code', data);
+					const otp = {
+						code: data.code,
+						email: emailCheck[0].email,
+					};
+					insertOTP(otp);
+					delete emailCheck.password;
+					return response(res, true, emailCheck, 200);
 				}
 				return response(res, false, 'Email is not registered', 404);
 			}
@@ -173,17 +171,15 @@ module.exports = {
 	},
 	ChangePassword: async (req, res) => {
 		try {
-			let email = await encryptor.decrypt(req.body.email.replace('~', '/'))
 			const data = {
-				email: email,
+				email: req.body.email,
 				password: hashSync(req.body.password, genSaltSync(1)),
 			};
-			console.log(email)
 			const validation = changePassVal(data);
 			if (validation.error === undefined) {
 				const result = await updateUser(data, data.email);
 				console.log(result);
-				return response(res, true, 'Check your email to change password', 200);
+				return response(res, true, 'Password has been changed', 200);
 			}
 			let errorMessage = validation.error.details[0].message;
 			errorMessage = errorMessage.replace(/"/g, '');

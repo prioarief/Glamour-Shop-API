@@ -6,13 +6,13 @@ module.exports = {
 		let snap = new midtransClient.Snap({
 			// Set to true if you want Production Environment (accept real transaction).
 			isProduction: false,
-			serverKey: 'SB-Mid-server-e-BoGKjll_KyFBRmwrfY88v-',
+			serverKey: process.env.MIDTRANS_KEY,
 		});
 
 		let parameter = {
 			transaction_details: {
 				order_id: `ORDER-00${data.id}`,
-				gross_amount: data.total * 13000,
+				gross_amount: data.total * parseInt(process.env.CONVERT_DOLLAR),
 			},
 			credit_card: {
 				secure: true,
@@ -35,7 +35,7 @@ module.exports = {
 		await snap.createTransaction(parameter).then(async (transaction) => {
 			// transaction token
 			// let transactionToken = transaction.token;
-            result = await transaction;
+			result = await transaction;
 		});
 		return result;
 	},
